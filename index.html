@@ -1,21 +1,21 @@
 <html>
-	<head>
-		<title>Trivia Game</title>
+<head>
+<title>Trivia Game</title>
 
-		<style>
-			#answerArea {
-				display: none;
-			}
-		</style>
+<style>
+#answerArea , #questionArea , #gameOver {
+	display: none;
+}
+</style>
 
-		<script
-		  src="https://code.jquery.com/jquery-3.2.1.js"
-		  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
-		  crossorigin="anonymous">
+<script
+  src="https://code.jquery.com/jquery-3.2.1.js"
+  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+  crossorigin="anonymous">
 
-		</script>
+</script>
 
-	</head>
+</head>
 
 <body>
 
@@ -28,18 +28,26 @@
 
 <div id="bawdy">
 
+<div id="starter"> 
+<button id="letsPlay" onclick="playGame()">Let's Play</button>
+</div>
+
+<div id="gameOver">
+<h3>Game Over, starting over in 5!</h3>
+</div>
+
 
 <div id="questionArea">
 <h3>Question</h3>
 <span id="question">Test Question</span>
 <ol id="questionOptions">
-<li id="option0" onclick="showAnswer("option0")">1Blah</li>
+<li id="option0" onclick="showAnswer(0)">1Blah</li>
 
-<li id="option1">2Blah</li>
+<li id="option1" onclick="showAnswer(1)">2Blah</li>
 
-<li id="option2">3Blah</li>
+<li id="option2" onclick="showAnswer(2)">3Blah</li>
 
-<li id="option3">4Blah</li>
+<li id="option3" onclick="showAnswer(3)">4Blah</li>
 
 </ol>
 </div>
@@ -57,76 +65,141 @@
 
 </div>
 <script>
-//show answer area
+// How it was supposed to work
+//	list of questions randomized
+//	list of options randomized
+//	Button shows question area
+//	clicking option divs answers question with corresponding option
+//	answer shows for 5 seconds then loads next
+//	if no answer within 5 seconds then answer = undefined
+//	loop for the list.length then reset which
+//		hides 
+
+function cl(string){
+   return console.log(string);
+};
+
+// show answer area
 
 var intervalID, timedAnswer, showAnswer, startGame; 
 var options = []
+var list = []
+var left = 0;
 
-//test making array of questions
+// test making array of questions
 var q = new Object();
+	q.name = "q dammit";
  	q.ask = "What is Roch's favorite color?";
 	q.answer = ["purple"];
 	q.wrong = ["green", "yellow", "blue"];
-	options = q.answer.concat(q.wrong); 
+	q.options = q.answer.concat(q.wrong); 
 
-console.log(options);
+// shuffle(q.options);
 
+
+//console.log(options);
+
+var w = new Object();
+	w.name = "w dammit";
+ 	w.ask = "What is Roch's favorite car?";
+	w.answer = ["BMW M Coupe"];
+	w.wrong = ["Miata", "Pinto", "Ford Explorer"];
+	w.options = w.answer.concat(w.wrong); 
+
+var e = new Object();
+	e.name = "e dammit";
+ 	e.ask = "What is Roch's favorite food?";
+	e.answer = ["Grits Sausage and Eggs"];
+	e.wrong = ["Spaghetti", "Tacos", "Brussel Sprouts"];
+	e.options = e.answer.concat(e.wrong); 
+
+var r = new Object();
+
+	r.name = "r dammit";
+ 	r.ask = "What is Roch's favorite Tv Show?";
+	r.answer = ["Black Jesus"];
+	r.wrong = ["Boondocks", "Black Dynamite", "Chappelle Show"];
+	r.options = r.answer.concat(r.wrong); 
+
+//assign list
+list[0] = q;
+list[1] = w;
+list[2] = e;
+list[3] = r;
+
+//shuffle(list);
 
 //test timer function
-showAnswer = function (string) {
-	var r = string;	
-//	r = r.substring(0, r.length-1);
+showAnswer = function (sa) {
 	clearInterval(intervalID);
-	timedAnswer(r);
-//	'$("#' + r + '").text()';
-	
+	timedAnswer(sa);
+//	console.log(string);
 };
 
 startGame = function () {
-
+	$("#starter").css("display" , "none");
 	$("#answerArea").css("display" , "none");
-
+	$("#gameOver").css("display" , "none");
 	$("#questionArea").css("display" , "initial");
+	load(left);
+	intervalId = setTimeout(askQuestion(left), 5000);
 };
+
+function resetGame() {
+	$("#starter").css("display" , "none");
+	$("#answerArea").css("display" , "none");
+	$("#questionArea").css("display" , "none");
+	$("#gameOver").css("display" , "initial");
+};
+
+function askQuestion(aq) {
+	
+	if (aq <=  list.length){
+		load(list[aq]);
+		startGame();
+		left++;
+	}else {
+		left = 0;
+		resetGame();
+	};
+};
+
 
 //answerArea clears the question for 5 seconds then reloads
-timedAnswer = function(string) {
-	var test = '$("#' + string + '").text()';
-
+timedAnswer = function(ta) {
 	$("#questionArea").css("display" , "none");
-	if (test === q.answer[0]) {
-	
-
-	$("#answer").html("You are Correct!");	
+	//eval answer
+	//if wrong else right
+	if ((list[ta].options[ta] === list[ta].answer[0]) === false) {
+	$("#answer").html("You are Incorrect!");	
+	$("#correctAnswer").html("The correct answer was " + list[ta].answer[0]);	
 
 } else{
-
-	
-	$("#answer").html("You are Incorrect!");	
-
+	$("#answer").html("You are Correct!");	
+	$("#correctAnswer").html("Let's move on in 5!");	
 };
 
-
 	$("#answerArea").css("display" , "initial");
-	intervalID = setInterval(startGame, 5000); 
-	console.log(showAnswer(option0));
+	intervalID = setTimeout(startGame, 5000); 
 };                                                
 
 
 //insert answers into question html
-function load(object) {
+function load(ld) {
+	console.log(ld);
+	$("#question").html(list[ld].ask);
+	shuffle(list[ld].options);
+	$("#option0").html(list[ld].options[0]);
+	$("#option1").html(list[ld].options[1]);
+	$("#option2").html(list[ld].options[2]);
+	$("#option3").html(list[ld].options[3]);
 	
-	$("#question").html(object.ask);
-	shuffle(options);
-	$("#option0").html(options[0]);
-	$("#option1").html(options[1]);
-	$("#option2").html(options[2]);
-	$("#option3").html(options[3]);
 };  
 
-load(q);
+//load(0);
 
-//fisher yates shuffle
+// fisher yates shuffle
+
 
 
 function shuffle(array) {
@@ -134,22 +207,28 @@ function shuffle(array) {
 
   // While there remain elements to shuffle…
   while (m) {
-
     // Pick a remaining element…
     i = Math.floor(Math.random() * m--);
-
     // And swap it with the current element.
     t = array[m];
     array[m] = array[i];
     array[i] = t;
   }
-
   return array;
 }
 
-shuffle(options);
+function playGame() {
+	shuffle(list);
+	load(left);
+	startGame();
+};
 
-console.log(options);
+
+
+
+//shuffle(options);
+
+//console.log(options);
 
 </script>
 </body>
