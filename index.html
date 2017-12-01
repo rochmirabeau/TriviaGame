@@ -1,0 +1,158 @@
+<html>
+	<head>
+		<title>Trivia Game</title>
+
+		<style>
+			#answerArea {
+				display: none;
+			}
+		</style>
+
+		<script
+		  src="https://code.jquery.com/jquery-3.2.1.js"
+		  integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+		  crossorigin="anonymous">
+
+		</script>
+
+	</head>
+
+<body>
+
+<div id="wrapper">
+
+<div id="heading">
+
+
+</div>
+
+<div id="bawdy">
+
+
+<div id="questionArea">
+<h3>Question</h3>
+<span id="question">Test Question</span>
+<ol id="questionOptions">
+<li id="option0" onclick="showAnswer("option0")">1Blah</li>
+
+<li id="option1">2Blah</li>
+
+<li id="option2">3Blah</li>
+
+<li id="option3">4Blah</li>
+
+</ol>
+</div>
+
+<div id="answerArea">
+<h3>Answer</h3>
+<span id="answer">Test Answer </span>
+<ul id="">
+<li id="correctAnswer"> </li>
+</ul>
+</div>
+
+</div>
+
+
+</div>
+<script>
+//show answer area
+
+var intervalID, timedAnswer, showAnswer, startGame; 
+var options = []
+
+//test making array of questions
+var q = new Object();
+ 	q.ask = "What is Roch's favorite color?";
+	q.answer = ["purple"];
+	q.wrong = ["green", "yellow", "blue"];
+	options = q.answer.concat(q.wrong); 
+
+console.log(options);
+
+
+//test timer function
+showAnswer = function (string) {
+	var r = string;	
+//	r = r.substring(0, r.length-1);
+	clearInterval(intervalID);
+	timedAnswer(r);
+//	'$("#' + r + '").text()';
+	
+};
+
+startGame = function () {
+
+	$("#answerArea").css("display" , "none");
+
+	$("#questionArea").css("display" , "initial");
+};
+
+//answerArea clears the question for 5 seconds then reloads
+timedAnswer = function(string) {
+	var test = '$("#' + string + '").text()';
+
+	$("#questionArea").css("display" , "none");
+	if (test === q.answer[0]) {
+	
+
+	$("#answer").html("You are Correct!");	
+
+} else{
+
+	
+	$("#answer").html("You are Incorrect!");	
+
+};
+
+
+	$("#answerArea").css("display" , "initial");
+	intervalID = setInterval(startGame, 5000); 
+	console.log(showAnswer(option0));
+};                                                
+
+
+//insert answers into question html
+function load(object) {
+	
+	$("#question").html(object.ask);
+	shuffle(options);
+	$("#option0").html(options[0]);
+	$("#option1").html(options[1]);
+	$("#option2").html(options[2]);
+	$("#option3").html(options[3]);
+};  
+
+load(q);
+
+//fisher yates shuffle
+
+
+function shuffle(array) {
+  var m = array.length, t, i;
+
+  // While there remain elements to shuffle…
+  while (m) {
+
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+
+  return array;
+}
+
+shuffle(options);
+
+console.log(options);
+
+</script>
+</body>
+
+
+</html>
